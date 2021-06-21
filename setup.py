@@ -5,7 +5,7 @@ with open('README.md', 'r') as fh:
 
 setuptools.setup(
     name='aussiebb',
-    version='0.3',
+    version='0.4',
     author='Michael Still',
     author_email='mikal@stillhq.com',
     description='A python library to interact with the Aussie Broadband customer portal',
