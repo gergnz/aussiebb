@@ -21,10 +21,11 @@ class AussiePortal(object):
 
         self._login()
 
-    def _request_banner(self, verb, url):
-         if self.debug:
-             print('-----------------------------------------------------')
-             print('%s %s' %(verb, url))
+    def _request_banner(self, verb, url, **kwargs):
+        if self.debug:
+            print('-----------------------------------------------------')
+            print('%s %s' %(verb, url))
+            print(kwargs)
 
     def _response_dump(self, r):
         if self.debug:
@@ -44,7 +45,7 @@ class AussiePortal(object):
                               {'username': self.username,
                                'password': self.password})
         self._response_dump(r)
-            
+
         if r.status_code != 200:
             raise RequestException('Request failed with status code: %d'
                                    % r.status_code)
@@ -57,11 +58,11 @@ class AussiePortal(object):
         self._response_dump(r)
         return r.json()
 
-    def _post(self, url):
-        self._request_banner('POST', url)
-        r = self.session.post(url)
-        self._response_dump(r)
-        return r.json()
+    def _post(self, url, **kwargs):
+        self._request_banner('POST', url, **kwargs)
+        r_post = self.session.post(url, **kwargs)
+        self._response_dump(r_post)
+        return r_post.json()
 
     def customer(self):
         url = 'https://myaussie-api.aussiebroadband.com.au/customer'
@@ -79,7 +80,8 @@ class AussiePortal(object):
     def dpuportstatus(self, service_id):
         url = ('https://myaussie-api.aussiebroadband.com.au/tests/%s/dpuportstatus'
                % service_id)
-        return self._post(url)
+        data = {'delayed': 'true'}
+        return self._post(url, data=data)
 
     def testresult(self, service_id, test_id):
         url = ('https://myaussie-api.aussiebroadband.com.au/tests/%s/%s'
